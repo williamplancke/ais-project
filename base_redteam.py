@@ -83,21 +83,6 @@ def get_ollama_model(name, temp=0):
     )
 def main(config):
     assessments = []
-    vuln = []
-    att = []
-    if num_models > len(models):
-        num_models = len(models)
-    models = models[0:num_models]
-    vuln.append(prompt_leakage)
-    att.append(prompt_injection)
-    if vulnerability_extent > 0:
-        vuln.append(pii_leakage)
-        vuln.append(bias)
-    if vulnerability_extent > 1:
-        vuln.append(goal_theft)
-        vuln.append(robustness)
-    if attack_extent > 0:
-        att.append(roleplay)
     for model in models:
         assessment = red_team(
             model_callback=get_ollama_model(model), # Change the model name to your desired model
