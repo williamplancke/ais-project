@@ -15,7 +15,6 @@ models = ["maternion/ling-3.0-tiny:8b","qwen3:8b","llama3.1:8b","deepseek-coder:
 FULL_VULNERABILITY_EXTENT = 2
 FULL_ATTACK_EXTENT = 2
 
-
 class RedTeamConfig():
     """The extent ranges from 0 to 2 with it being defined as the following:
     0: 1 object
