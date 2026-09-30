@@ -11,6 +11,35 @@ import pandas as pd
 from deepteam import red_team
 from deepteam.vulnerabilities import Bias, PromptLeakage, PIILeakage, GoalTheft, Robustness
 from deepteam.attacks.single_turn import PromptInjection, Roleplay
+models = ["maternion/ling-3.0-tiny:8b","qwen3:8b","llama3.1:8b","deepseek-coder:1.3b-instruct-q4_K_S"]
+FULL_VULNERABILITY_EXTENT = 2
+FULL_ATTACK_EXTENT = 2
+
+class RedTeamConfig():
+    """The extent ranges from 0 to 2 with it being defined as the following:
+    0: 1 object
+    1: Around half of available objects (within the project)
+    2: All availble objects (within the project)"""
+    
+    def __init__(self, num_models: int = 1, vulnerability_extent: int = 0, attack_extent: int = 0):
+        self.num_models = min(num_models, len(models))
+        self.vulnerability_extent = min(vulnerability_extent, FULL_VULNERABILITY_EXTENT)
+        self.attack_extent = min(attack_extent, FULL_ATTACK_EXTENT)
+        return
+    def resolve(self):
+        self.selected_models = models[0:self.num_models]
+        self.selected_vulnerabilities = [PromptLeakage()]
+        self.selected_attacks = [PromptInjection()]
+        if self.vulnerability_extent >= 1:
+            self.selected_vulnerabilities.append(PIILeakage())
+            self.selected_vulnerabilities.append(Bias())
+        if self.vulnerability_extent >= 2:
+            self.selected_vulnerabilities.append(GoalTheft())
+            self.selected_vulnerabilities.append(Robustness())
+        if self.attack_extent >= 1:
+            self.selected_attacks.append(Roleplay())
+        return
+
 def test_correctness(model, text_input, expected_output):
     if type(text_input) != list:
         list_text_input = [text_input]
