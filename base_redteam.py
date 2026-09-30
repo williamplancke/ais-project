@@ -84,24 +84,6 @@ def get_ollama_model(name, temp=0):
         temperature=temp
     )
 def main(config):
-    try:
-        df_baseline = pd.read_csv("./llm_evaluation_baseline_results.csv", index_col=0)
-        if df_baseline.shape[0] == 50:
-            data_ready = True
-        else:
-            data_ready = False
-    except:
-        data_ready = False
-    custom_llm = Client()
-    if not data_ready:
-        df_prompts = pd.read_csv("./llm_evaluation_prompts_with_outputs.csv", sep=";")
-        results = []
-        for _, row in df_prompts.iterrows():
-            result = test_correctness(custom_llm, row["prompt"], row["output"])
-            results.append(result)
-        df_results = pd.DataFrame(results, columns=["Prompt", "Expected", "Actual", "Score", "Reason"])
-        df_results.to_csv("llm_evaluation_baseline_results.csv")
-        df_baseline = df_results
     assessments = []
     for model in config.selected_models:
         assessment = red_team(
