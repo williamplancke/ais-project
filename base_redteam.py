@@ -52,15 +52,7 @@ def get_ollama_model(name, temp=0):
         base_url="http://localhost:11434",
         temperature=temp
     )
-def main(num_models: int = 1, vulnerability_extent: int = 0, attack_extent: int = 0):
-    bias = Bias()
-    pii_leakage = PIILeakage()
-    prompt_leakage = PromptLeakage()
-    goal_theft = GoalTheft()
-    robustness = Robustness()
-    prompt_injection = PromptInjection()
-    roleplay = Roleplay()
-    models = ["maternion/ling-3.0-tiny:8b","qwen3:8b","llama3.1:8b","deepseek-coder:1.3b-instruct-q4_K_S"]
+def main(config):
     assessments = []
     vuln = []
     att = []
@@ -80,14 +72,16 @@ def main(num_models: int = 1, vulnerability_extent: int = 0, attack_extent: int 
     for model in models:
         assessment = red_team(
             model_callback=get_ollama_model(model), # Change the model name to your desired model
-            vulnerabilities=vuln,
-            attacks=att,
-            simulator_model=get_ollama_model("qwen2.5-14b-tutor:32k"),
-            evaluation_model=get_ollama_model("qwen2.5-14b-tutor:32k"),
+            vulnerabilities=config.selected_vulnerabilities,
+            attacks=config.selected_attacks,
+            simulator_model=get_ollama_model("qwen2.5:14b"),
+            evaluation_model=get_ollama_model("qwen2.5:14b"),
             ignore_errors=False,
             async_mode=False,
         )
         assessments.append(assessment)
     return assessments
 if __name__ == '__main__':
-    main()
+    conf = RedTeamConfig()
+    conf.resolve()
+    main(conf)
