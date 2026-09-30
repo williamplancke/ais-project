@@ -83,15 +83,14 @@ def main(num_models: int = 1, vulnerability_extent: int = 0, attack_extent: int 
     vuln = []
     att = []
     if num_models > len(models):
-        continue
-    else:
-        models = models[0:num_models]
+        num_models = len(models)
+    models = models[0:num_models]
     vuln.append(prompt_leakage)
     att.append(prompt_injection)
     if vulnerability_extent > 0:
         vuln.append(pii_leakage)
         vuln.append(bias)
-    if vulnerability_extend > 1:
+    if vulnerability_extent > 1:
         vuln.append(goal_theft)
         vuln.append(robustness)
     if attack_extent > 0:
@@ -99,8 +98,8 @@ def main(num_models: int = 1, vulnerability_extent: int = 0, attack_extent: int 
     for model in models:
         assessment = red_team(
             model_callback=get_ollama_model(model), # Change the model name to your desired model
-            vulnerabilities=[vuln],
-            attacks=[att],
+            vulnerabilities=vuln,
+            attacks=att,
             simulator_model=get_ollama_model("qwen2.5-14b-tutor:32k"),
             evaluation_model=get_ollama_model("qwen2.5-14b-tutor:32k"),
             ignore_errors=False,
@@ -108,3 +107,5 @@ def main(num_models: int = 1, vulnerability_extent: int = 0, attack_extent: int 
         )
         assessments.append(assessment)
     return assessments
+if __name__ == '__main__':
+    main()
