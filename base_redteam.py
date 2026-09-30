@@ -10,7 +10,7 @@ from ollama import Client
 import pandas as pd
 from deepteam import red_team
 from deepteam.vulnerabilities import Bias, PromptLeakage, PIILeakage, GoalTheft, Robustness
-from deepteam.attacks.single_turn import PromptInjection, Roleplay
+from deepteam.attacks.single_turn import PromptInjection, LinearJailbreaking
 models = ["maternion/ling-3.0-tiny:8b","qwen3:8b","llama3.1:8b","deepseek-coder:1.3b-instruct-q4_K_S"]
 FULL_VULNERABILITY_EXTENT = 2
 FULL_ATTACK_EXTENT = 2
@@ -37,7 +37,7 @@ class RedTeamConfig():
             self.selected_vulnerabilities.append(GoalTheft())
             self.selected_vulnerabilities.append(Robustness())
         if self.attack_extent >= 1:
-            self.selected_attacks.append(Roleplay())
+            self.selected_attacks.append(LinearJailbreaking())
         return
 
 def test_correctness(model, text_input, expected_output):
@@ -83,7 +83,7 @@ def get_ollama_model(name, temp=0):
     )
 def main(config):
     assessments = []
-    for model in models:
+    for model in config.selected_models:
         assessment = red_team(
             model_callback=get_ollama_model(model), # Change the model name to your desired model
             vulnerabilities=config.selected_vulnerabilities,
