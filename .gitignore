@@ -1,0 +1,9 @@
+.env
+.env.local
+*.ipynb
+!*.py
+*.lock
+*.csv
+.deepeval
+llm_evaluation_prompts.txt
+__pycache__

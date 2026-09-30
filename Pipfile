@@ -1,0 +1,22 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pyrit = "*"
+huggingface = "*"
+ipykernel = "*"
+transformers = "*"
+torch = "*"
+accelerate = "*"
+langchain = "*"
+deepteam = "*"
+deepeval = "*"
+sentry-sdk = "*"
+openai = "*"
+garak = "*"
+python-dotenv = "*"
+ollama = "*"
+[requires]
+python_full_version = "3.13.13"
