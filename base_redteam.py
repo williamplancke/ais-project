@@ -36,7 +36,6 @@ class RedTeamConfig():
         return
     def resolve(self):
         self.selected_models = models[0:self.num_models]
-        self.selected_vulnerabilities = [PromptLeakage()]
         self.selected_attacks = [PromptInjection()]
         try:
             if type(self.vulnerability_extent) == int:
