@@ -90,12 +90,14 @@ def main(config):
             model_callback=get_ollama_model(model), # Change the model name to your desired model
             vulnerabilities=config.selected_vulnerabilities,
             attacks=config.selected_attacks,
-            simulator_model=get_ollama_model("qwen2.5-14b-tutor:32k"),
-            evaluation_model=get_ollama_model("qwen2.5-14b-tutor:32k"),
+            simulator_model=get_ollama_model("qwen2.5:14b"),
+            evaluation_model=get_ollama_model("qwen2.5:14b"),
             ignore_errors=False,
             async_mode=False,
         )
         assessments.append(assessment)
     return assessments
 if __name__ == '__main__':
-    main()
+    conf = RedTeamConfig()
+    conf.resolve()
+    main(conf)
